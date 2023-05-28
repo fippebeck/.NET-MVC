@@ -1,0 +1,33 @@
+﻿@model BackofficeViewModel;
+@using Microsoft.AspNetCore.Identity;
+@using WebApp.Models;
+@inject UserManager<User> _userManager;
+
+<h1>Backoffice</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Roll</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    @{
+                        var userRoles = await _userManager.GetRolesAsync(user);
+                        var role = Model.Roles.FirstOrDefault(r => r.Name == userRoles.FirstOrDefault());
+                        if (role != null)
+                        {
+                            @role.Name
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
