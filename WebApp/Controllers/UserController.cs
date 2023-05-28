@@ -86,27 +86,21 @@ namespace WebApp.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    UserRoles = new List<UserRole>() // Initialize the UserRoles property
+                    UserRoles = new List<UserRole>()
                 };
 
-                // Set the password for the user
-                user.PasswordHash = userManager.PasswordHasher.HashPassword(user, model.Password);
-
-                var result = await userManager.CreateAsync(user);
+                var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     if (userManager.Users.Count() == 1)
                     {
-                        // First user registered, assign the "Admin" role
                         await userManager.AddToRoleAsync(user, "Admin");
                     }
                     else
                     {
-                        // Subsequent users, assign the "User" role
                         await userManager.AddToRoleAsync(user, "User");
                     }
 
-                    // You can customize the redirect logic based on your application's requirements
                     return RedirectToAction("Index", "Home");
                 }
 
